@@ -23,11 +23,17 @@ import { LoginDto } from './dto/login.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { User } from 'src/db/schema';
 import { Throttle } from '@nestjs/throttler';
+import { TokenService } from './token.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   //    POST /api/auth/register
   @Public()
@@ -54,7 +60,6 @@ export class AuthController {
     @Query('token') token: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log('TOKEN RECEIVED:', token);
     return this.authService.verifyEmail(token, res);
   }
   //    POST /api/auth/login
@@ -81,12 +86,12 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const cookies = req.cookies as Record<string, string>;
-    const refreshToken = cookies?.refreshToken;
+    const refreshToken = cookies?.[this.tokenService.cookies_refresh_token];
     return this.authService.refreshToken(refreshToken, res);
   }
 
   //    POST /api/auth/logout
-  @Public()
+  // @Public()
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
@@ -98,8 +103,7 @@ export class AuthController {
     return this.authService.logout(user.id, res);
   }
 
-  //    POST /api/auth/logout
-  @Public()
+  //    POST /api/auth/me
   @Get('me')
   @ApiOperation({ summary: 'Get current user' })
   @ApiBearerAuth()
@@ -111,5 +115,22 @@ export class AuthController {
       role: user.role,
       isVerified: user.isVerified,
     };
+  }
+  //    POST /api/auth/forgot-password
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'forgot-password' })
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.email);
+  }
+
+  //    POST /api/auth/forgot-password
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'reset-password' })
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto.resetToken, dto.newPassword);
   }
 }

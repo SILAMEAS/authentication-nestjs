@@ -30,7 +30,7 @@ export class EmailService {
     const appUrl = this.appConfigService.appUrl;
 
     const resetPasswordUrl = `${appUrl}/api/auth/reset-password?token=${token}`;
-
+    console.log('resetPasswordUrl : ', resetPasswordUrl);
     await this.resend.emails.send({
       from: 'onboarding@resend.dev',
       to: email,

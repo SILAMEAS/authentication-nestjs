@@ -129,7 +129,7 @@ export class AuthService {
     /** verify refresh token */
     const payload = await this.tokenService.verifyRefreshToken(refresh_token);
 
-    const user = await this.usersService.findByEmail(payload.sub);
+    const user = await this.usersService.findById(payload.sub);
     if (!user?.refreshTokenHash) {
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -156,5 +156,49 @@ export class AuthService {
     await this.usersService.update(userId, { refreshTokenHash: null });
     this.tokenService.removeRefreshTokenCookies(res);
     return { message: 'logout successfully' };
+  }
+  /** forgotPassword */
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      return {
+        message: 'If an account exist with this email reset link has been sent',
+      };
+    }
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExp = new Date(Date.now() + 60 * 60 * 1000); // 1hours
+
+    await this.usersService.update(user.id, {
+      resetToken,
+      resetTokenExp,
+    });
+    await this.emailService.resetPassword(email, resetToken);
+
+    return {
+      message: 'If an account exist with this email reset link has been sent',
+    };
+  }
+  /** resetPassword */
+  async resetPassword(resetToken: string, newPassword: string) {
+    const user = await this.usersService.findByResetToken(resetToken);
+
+    if (!user || !user?.resetToken) {
+      throw new NotFoundException('Invalid reset token');
+    }
+    if (user?.resetTokenExp && user?.resetTokenExp < new Date()) {
+      throw new BadRequestException('Reset token expired');
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    await this.usersService.update(user.id, {
+      passwordHash,
+      resetToken: null,
+      resetTokenExp: null,
+    });
+
+    return {
+      message: 'Password reset successfully',
+    };
   }
 }

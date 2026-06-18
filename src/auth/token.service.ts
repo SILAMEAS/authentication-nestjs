@@ -8,7 +8,7 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class TokenService {
-  private readonly cookies_refresh_token = 'refresh_token';
+  public readonly cookies_refresh_token = 'refresh_token';
   constructor(
     private readonly appConfigService: AppConfigService,
     private readonly jwtService: JwtService,
@@ -35,11 +35,11 @@ export class TokenService {
   /** ______ Save Refresh Token __________ */
   public async saveRefreshToken(userId: string, refreshToken: string) {
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-    const user = await this.usersService.update(userId, { refreshTokenHash });
+    await this.usersService.update(userId, { refreshTokenHash });
   }
   /** ______ Set Refresh Token to Cookies __________ */
   public setRefreshTokenCookies(res: Response, refreshToken: string) {
-    const resT = res.cookie(this.cookies_refresh_token, refreshToken, {
+    res.cookie(this.cookies_refresh_token, refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

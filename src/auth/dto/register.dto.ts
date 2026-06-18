@@ -10,7 +10,7 @@ export class RegisterDto {
   @ApiProperty({ example: 'email@gmail.com' })
   @IsEmail()
   email!: string;
-  @ApiProperty({ example: 'password', minLength: 8 })
+  @ApiProperty({ example: '#password123', minLength: 8 })
   @IsString()
   @MinLength(8)
   password!: string;

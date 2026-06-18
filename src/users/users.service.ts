@@ -22,6 +22,12 @@ export class UsersService {
     });
   }
 
+  async findByResetToken(resetToken: string) {
+    return db.query.users.findFirst({
+      where: eq(users.resetToken, resetToken),
+    });
+  }
+
   async create(createUserDto: NewUser) {
     const [user] = await db.insert(users).values(createUserDto).returning();
     return user;
