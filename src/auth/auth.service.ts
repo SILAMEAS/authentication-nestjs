@@ -2,12 +2,13 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { LoginDto } from './dto/login.dto';
 
@@ -48,12 +49,25 @@ export class AuthService {
   /** Verify Email */
   async verifyEmail(token: string, res: Response) {
     const user = await this.usersService.findByToken(token);
-    if (!user?.token) {
+
+    // 1. token not found in DB
+    if (!user) {
       throw new BadRequestException('Invalid verification token');
     }
-    if (user?.tokenExp && user?.tokenExp <= new Date()) {
+
+    // 2. already verified → don't treat as error
+    if (user.isVerified) {
+      return {
+        message: 'Email already verified',
+      };
+    }
+
+    // 3. expired token
+    if (user.tokenExp && user.tokenExp < new Date()) {
       throw new ConflictException('Verification expired');
     }
+
+    // 4. verify user
     await this.usersService.update(user.id, {
       isVerified: true,
       token: null,
@@ -61,7 +75,9 @@ export class AuthService {
     });
 
     const tokens = await this.tokenService.generateToken(user);
+
     await this.tokenService.saveRefreshToken(user.id, tokens.refreshToken);
+
     this.tokenService.setRefreshTokenCookies(res, tokens.refreshToken);
 
     return {
@@ -80,7 +96,7 @@ export class AuthService {
   async login(dto: LoginDto, res: Response) {
     const user = await this.usersService.findByEmail(dto.email);
     if (!user) {
-      throw new UnauthorizedException('Invalid Credentials');
+      throw new NotFoundException('User not found');
     }
     const passwordMatch = await bcrypt.compare(dto.password, user.passwordHash);
     if (!passwordMatch) {

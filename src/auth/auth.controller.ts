@@ -9,7 +9,12 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Public } from '../common/decorators/public.decorator';
 import { RegisterDto } from './dto/register.dto';
@@ -33,13 +38,25 @@ export class AuthController {
   }
 
   //    GET /api/auth/verify-email?token=...
+  // @Public()
+  // @Get('verify-email')
+  // @ApiOperation({ summary: 'Verify email' })
+  // async verifyEmail(
+  //   @Query('token') token: string,
+  //   @Res({ passthrough: true }) res: Response,
+  // ) {
+  //   return this.authService.verifyEmail(token, res);
+  // }
   @Public()
   @Get('verify-email')
   @ApiOperation({ summary: 'Verify email' })
-  async verifyEmail(@Query('token') token: string, @Res() res: Response) {
+  verifyEmail(
+    @Query('token') token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    console.log('TOKEN RECEIVED:', token);
     return this.authService.verifyEmail(token, res);
   }
-
   //    POST /api/auth/login
   @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Public()
@@ -95,5 +112,4 @@ export class AuthController {
       isVerified: user.isVerified,
     };
   }
-
 }
