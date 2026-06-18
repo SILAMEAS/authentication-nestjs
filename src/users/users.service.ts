@@ -16,6 +16,12 @@ export class UsersService {
     });
   }
 
+  async findByToken(token: string) {
+    return db.query.users.findFirst({
+      where: eq(users.token, token),
+    });
+  }
+
   async create(createUserDto: NewUser) {
     const [user] = await db.insert(users).values(createUserDto).returning();
     return user;

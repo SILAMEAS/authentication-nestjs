@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Resend } from 'resend';
-import { ConfigService } from '@nestjs/config';
+import { AppConfigService } from '../config/app-config.service';
 
 @Injectable()
 export class EmailService {
   private readonly resend: Resend;
-  constructor(private readonly configService: ConfigService) {
-    this.resend = new Resend(this.configService.get<string>('RESENT_API_KEY'));
+  constructor(private readonly appConfigService: AppConfigService) {
+    this.resend = new Resend(this.appConfigService.resentApiKey);
   }
   async verifyEmail(email: string, token: string) {
-    const appUrl = this.configService.get<string>('APP_URL');
+    const appUrl = this.appConfigService.appUrl;
 
     const verificationUrl = `${appUrl}/api/auth/verify-email?${token}`;
 
@@ -25,7 +25,7 @@ export class EmailService {
   }
 
   async resetPassword(email: string, token: string) {
-    const appUrl = this.configService.get<string>('APP_URL');
+    const appUrl = this.appConfigService.appUrl;
 
     const resetPasswordUrl = `${appUrl}/api/auth/reset-password?${token}`;
 

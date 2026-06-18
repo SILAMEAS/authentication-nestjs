@@ -10,3 +10,8 @@
 
 ## Dev-Dependency 
 - npm i -D @types/bcrypt @types/cookie-parser drizzle-kit dotenv
+
+npm i ms
+npm i -D @types/ms
+
+make EXP_IN in env known
