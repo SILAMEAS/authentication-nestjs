@@ -182,7 +182,7 @@ export class AuthService {
   async resetPassword(resetToken: string, newPassword: string) {
     const user = await this.usersService.findByResetToken(resetToken);
 
-    if (!user || !user?.resetToken) {
+    if (!user?.resetToken) {
       throw new NotFoundException('Invalid reset token');
     }
     if (user?.resetTokenExp && user?.resetTokenExp < new Date()) {
