@@ -63,7 +63,6 @@ export class AuthController {
     return this.authService.verifyEmail(token, res);
   }
   //    POST /api/auth/login
-  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -104,6 +103,7 @@ export class AuthController {
   }
 
   //    POST /api/auth/me
+  @Throttle({ default: { ttl: 60000, limit: 10000 } })
   @Get('me')
   @ApiOperation({ summary: 'Get current user' })
   @ApiBearerAuth()
