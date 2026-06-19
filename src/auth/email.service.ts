@@ -13,16 +13,37 @@ export class EmailService {
 
     const verificationUrl = `${appUrl}/api/auth/verify-email?token=${token}`;
 
-    console.log('verificationUrl : ', verificationUrl);
-
     await this.resend.emails.send({
       from: 'onboarding@resend.dev',
       to: email,
       subject: 'Verify your email',
-      html: `<h2>Welcome! Please verify your email</h2>
-              <p>Click the link below to verify your email address. This link expires in 24 hours.</p>
-              <a href="${verificationUrl}"> verify email</a>
-              <p>If you didn't create an account, you can safely ignore this email</p>`,
+      html: `
+      <h2>Welcome! Please verify your email</h2>
+
+      <p>
+        Verify your email address.
+        This link expires in 24 hours : 
+      </p>
+      
+
+      <p>
+        <a href="${verificationUrl}">
+          ${verificationUrl}
+        </a>
+      </p>
+
+
+      <p>Token:</p>
+
+      <p>
+        <code>${token}</code>
+      </p>
+
+   
+      <p>
+        If you didn't create an account, you can safely ignore this email.
+      </p>
+    `,
     });
   }
 
