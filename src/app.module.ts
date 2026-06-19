@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guards';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { RoleGuards } from './common/guards/rolee.guards';
 import { TasksModule } from './tasks/tasks.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TasksModule } from './tasks/tasks.module';
     UsersModule,
     AuthModule,
     TasksModule,
+    AdminModule,
   ],
   providers: [
     AppConfigService,

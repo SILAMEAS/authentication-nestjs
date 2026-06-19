@@ -29,7 +29,7 @@ export const users = pgTable('users', {
 export const tasks = pgTable('tasks', {
   id: uuid('id').defaultRandom().primaryKey(),
   title: text('title').notNull(),
-  description: text('description').notNull(),
+  description: text('description'),
   status: taskStatusEnum('status').notNull().default('todo'),
   userId: uuid('user_id')
     .notNull()
