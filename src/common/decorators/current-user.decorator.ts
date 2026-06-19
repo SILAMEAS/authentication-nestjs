@@ -1,4 +1,4 @@
-import { User } from '../../db/schema';
+import { User } from '../../drizzle/schema';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
 

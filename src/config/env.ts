@@ -1,4 +1,5 @@
 import type { StringValue } from 'ms';
+
 export interface Env {
   DATABASE_URL: string;
   JWT_ACCESS_SECRET: string;
@@ -8,4 +9,5 @@ export interface Env {
   APP_URL: string;
   JWT_REFRESH_SECRET: string;
   PORT: number;
+  FRONTEND_URL: string;
 }

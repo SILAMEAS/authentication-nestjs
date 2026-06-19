@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AppConfigService } from '../config/app-config.service';
-import { User } from '../db/schema';
+import { User } from '../drizzle/schema';
 import * as bcrypt from 'bcryptjs';
 import type { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';

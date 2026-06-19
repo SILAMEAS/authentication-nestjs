@@ -10,7 +10,7 @@ import {
 import { TasksService } from './tasks.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
-import type { User } from '../db/schema';
+import type { User } from '../drizzle/schema';
 import { CreateTaskDto } from './dto/create-task.dto';
 
 @ApiTags('Tasks')

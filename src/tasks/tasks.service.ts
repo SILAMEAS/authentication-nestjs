@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { db } from '../db';
-import { tasks } from '../db/schema';
+import { db } from '../drizzle';
+import { tasks } from '../drizzle/schema';
 import { and, eq } from 'drizzle-orm';
 import { CreateTaskDto } from './dto/create-task.dto';
 

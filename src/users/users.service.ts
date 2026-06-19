@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { NewUser, users } from '../db/schema';
-import { db } from '../db';
+import { NewUser, users } from '../drizzle/schema';
+import { db } from '../drizzle';
 import { eq } from 'drizzle-orm';
 
 @Injectable()

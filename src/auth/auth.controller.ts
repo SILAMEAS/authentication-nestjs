@@ -21,7 +21,7 @@ import { RegisterDto } from './dto/register.dto';
 import type { Request, Response } from 'express';
 import { LoginDto } from './dto/login.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
-import type { User } from 'src/db/schema';
+import type { User } from 'src/drizzle/schema';
 import { Throttle } from '@nestjs/throttler';
 import { TokenService } from './token.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
