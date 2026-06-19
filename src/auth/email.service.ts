@@ -58,6 +58,11 @@ export class EmailService {
       subject: 'Reset your password',
       html: `<h2>Welcome! Please reset your password</h2>
               <p>Click the link below to reset your password. This link expires in 1hour.</p>
+              <p>
+              <a href="${resetPasswordUrl}">
+                ${resetPasswordUrl}
+              </a>
+            </p>
               <a href="${resetPasswordUrl}"> reset password</a>
               <p>If you didn't reset password, you can safely ignore this email</p>`,
     });
