@@ -10,6 +10,10 @@ import { Env } from './config/env';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService<Env>);
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.use(cookieParser());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
